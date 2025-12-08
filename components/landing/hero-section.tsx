@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState } from "react"
+import { useState, useMemo, useCallback } from "react"
 
 const featureSlides = [
   {
@@ -30,13 +30,15 @@ const featureSlides = [
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0)
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % featureSlides.length)
-  }
+  }, [])
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + featureSlides.length) % featureSlides.length)
-  }
+  }, [])
+
+  const currentFeature = useMemo(() => featureSlides[currentSlide], [currentSlide])
 
   return (
     <section className="relative min-h-screen bg-primary overflow-hidden pt-20">
@@ -89,7 +91,7 @@ export function HeroSection() {
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-8 text-balance">
-              Platform koordinasi
+              Platform Koordinasi
               <span className="text-accent"> pulang bersama </span>
               mahasiswa Jambi.
             </h1>
@@ -102,11 +104,6 @@ export function HeroSection() {
             >
               <Link href="/signup">DAFTAR SEKARANG</Link>
             </Button>
-
-            {/* Bottom Left Text */}
-            <p className="text-primary-foreground/40 text-sm mt-16 max-w-xs">
-              Koordinasi perjalanan Bandung → Jambi untuk mahasiswa ITB
-            </p>
           </div>
 
           {/* Right Side - Stats */}
@@ -132,22 +129,14 @@ export function HeroSection() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">
-                    {featureSlides[currentSlide].number}
+                    {currentFeature.number}
                   </span>
                 </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">{featureSlides[currentSlide].title}</h3>
-                <p className="text-muted-foreground text-sm mb-4">{featureSlides[currentSlide].description}</p>
+                <h3 className="font-bold text-foreground text-lg mb-2">{currentFeature.title}</h3>
+                <p className="text-muted-foreground text-sm mb-4">{currentFeature.description}</p>
                 <Link href="#fitur" className="text-primary font-semibold text-sm hover:underline">
                   Lihat selengkapnya
                 </Link>
-              </div>
-              <div className="relative w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                <Image
-                  src={featureSlides[currentSlide].image || "/placeholder.svg"}
-                  alt={featureSlides[currentSlide].title}
-                  fill
-                  className="object-cover"
-                />
               </div>
             </div>
             {/* Slider Controls */}
@@ -186,16 +175,16 @@ export function HeroSection() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">
-                    {featureSlides[currentSlide].number}
+                    {currentFeature.number}
                   </span>
                 </div>
-                <h3 className="font-bold text-foreground text-lg mb-2">{featureSlides[currentSlide].title}</h3>
-                <p className="text-muted-foreground text-sm">{featureSlides[currentSlide].description}</p>
+                <h3 className="font-bold text-foreground text-lg mb-2">{currentFeature.title}</h3>
+                <p className="text-muted-foreground text-sm">{currentFeature.description}</p>
               </div>
               <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
                 <Image
-                  src={featureSlides[currentSlide].image || "/placeholder.svg"}
-                  alt={featureSlides[currentSlide].title}
+                  src={currentFeature.image || "/placeholder.svg"}
+                  alt={currentFeature.title}
                   fill
                   className="object-cover"
                 />
