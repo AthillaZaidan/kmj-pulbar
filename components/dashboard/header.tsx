@@ -59,12 +59,6 @@ export function Header({ title, subtitle }: HeaderProps) {
                   Profil
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/profile" className="cursor-pointer">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Pengaturan
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive cursor-pointer" onClick={logout}>
                 <LogOut className="h-4 w-4 mr-2" />

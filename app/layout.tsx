@@ -11,23 +11,9 @@ const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "KMJ Pulang Bareng - Keluarga Mahasiswa Jambi ITB",
   description: "Sistem koordinasi perjalanan Bandung-Jambi untuk Keluarga Mahasiswa Jambi ITB",
-  generator: "v0.app",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+    icon: "/LOGO.svg",
+    apple: "/images/LOGO.png",
   },
 }
 

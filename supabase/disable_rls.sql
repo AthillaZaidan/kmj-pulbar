@@ -1,12 +1,7 @@
--- SIMPLE FIX: Disable RLS dan rely on API-level authorization
--- Ini lebih aman karena semua akses via API routes yang sudah ada NextAuth check
-
--- Disable RLS (API routes akan handle authorization)
 ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE travel_dates DISABLE ROW LEVEL SECURITY;
 ALTER TABLE participants DISABLE ROW LEVEL SECURITY;
 
--- Clean up old policies
 DROP POLICY IF EXISTS "Users can view all users" ON users;
 DROP POLICY IF EXISTS "Users can update their own data" ON users;
 DROP POLICY IF EXISTS "Anyone can view travel dates" ON travel_dates;

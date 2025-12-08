@@ -25,11 +25,11 @@ const navItems = [
   { href: "/admin/participants", label: "Peserta", icon: Users },
   { href: "/admin/dates", label: "Tanggal", icon: Calendar },
   { href: "/admin/flights", label: "Penerbangan", icon: Plane },
-  { href: "/admin/analytics", label: "Analitik", icon: BarChart3 },
-  { href: "/admin/reports", label: "Laporan", icon: FileText },
+  // { href: "/admin/analytics", label: "Analitik", icon: BarChart3 },
+  // { href: "/admin/reports", label: "Laporan", icon: FileText },
 ]
 
-const bottomNavItems = [{ href: "/dashboard/profile", label: "Pengaturan", icon: Settings }]
+const bottomNavItems = [{ href: "/dashboard/profile", label: "Profil", icon: Settings }]
 
 export function AdminSidebar() {
   const pathname = usePathname()
