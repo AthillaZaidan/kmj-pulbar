@@ -9,7 +9,8 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = (date: Date, travelDate?: any) => {
+    console.log('Date clicked:', date, 'Travel data:', travelDate)
     setSelectedDate(date)
     setIsModalOpen(true)
   }

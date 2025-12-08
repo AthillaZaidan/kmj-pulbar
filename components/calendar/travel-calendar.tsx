@@ -152,11 +152,17 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
             <div
               key={day}
               className={cn(
-                "min-h-[120px] p-2 border-b border-r border-border cursor-pointer transition-all group",
-                "hover:bg-accent/5 hover:shadow-inner",
+                "min-h-[120px] p-2 border-b border-r border-border cursor-pointer transition-all group relative",
+                "hover:bg-accent/10 hover:shadow-md hover:scale-[1.02]",
+                "active:scale-[0.98]",
                 isSelected && "bg-accent/10 ring-2 ring-accent ring-inset",
               )}
-              onClick={() => onDateSelect(date, travelDate)}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Calendar cell clicked:', day, date)
+                onDateSelect(date, travelDate)
+              }}
             >
               <div className="flex justify-between items-start mb-2">
                 <span

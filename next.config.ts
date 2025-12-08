@@ -1,20 +1,34 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable faster refresh
+  // Suppress async_hooks warnings in Bun
   experimental: {
-    // Optimize for Windows file watching
     webpackBuildWorker: true,
   },
+  serverExternalPackages: ['async_hooks'],
   // Increase file watch limit for Windows
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
     if (dev) {
       config.watchOptions = {
-        poll: 1000, // Check for changes every second
-        aggregateTimeout: 300, // Delay before rebuilding
-        ignored: /node_modules/, // Don't watch node_modules
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: /node_modules/,
       };
     }
+    
+    // Suppress async_hooks warnings for Bun
+    if (process.versions.bun) {
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push('async_hooks');
+      }
+      
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'async_hooks': false,
+      };
+    }
+    
     return config;
   },
 };
