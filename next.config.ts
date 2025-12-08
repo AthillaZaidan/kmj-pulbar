@@ -6,6 +6,18 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
   },
   serverExternalPackages: ['async_hooks'],
+  
+  // Configure image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
+    ],
+  },
+  
   // Increase file watch limit for Windows
   webpack: (config, { dev, isServer }) => {
     if (dev) {

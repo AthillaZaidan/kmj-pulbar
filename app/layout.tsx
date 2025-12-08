@@ -2,8 +2,7 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { AuthProvider } from "@/lib/auth-context"
-import { TravelProvider } from "@/lib/travel-context"
+import { Providers } from "./providers"
 import "./globals.css"
 
 const _inter = Inter({ subsets: ["latin"] })
@@ -44,9 +43,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={`font-sans antialiased`}>
-        <AuthProvider>
-          <TravelProvider>{children}</TravelProvider>
-        </AuthProvider>
+        <Providers>{children}</Providers>
         <Analytics />
       </body>
     </html>

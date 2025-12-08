@@ -1,9 +1,9 @@
 "use client"
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react"
-import { useRouter } from "next/navigation"
+import { createContext, useContext, type ReactNode } from "react"
+import { useSession, signIn, signOut } from "next-auth/react"
 
-// Dummy user data
+// User data structure
 export interface User {
   id: string
   name: string
@@ -15,74 +15,35 @@ export interface User {
 interface AuthContextType {
   user: User | null
   isLoading: boolean
-  login: (email: string, password: string) => Promise<boolean>
+  login: () => Promise<void>
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Dummy users for demo
-const DUMMY_USERS: User[] = [
-  {
-    id: "1",
-    name: "Demo User",
-    email: "demo@gmail.com",
-    image: "/stylized-user-avatar.png",
-    role: "user",
-  },
-  {
-    id: "2",
-    name: "Admin KMJ",
-    email: "admin@gmail.com",
-    image: "/professional-woman-avatar.png",
-    role: "admin",
-  },
-]
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
+  const { data: session, status } = useSession()
+  const isLoading = status === "loading"
 
-  // Check localStorage on mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem("kmj_user")
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-    setIsLoading(false)
-  }, [])
+  // Convert NextAuth session to our User format
+  const user: User | null = session?.user
+    ? {
+        id: session.user.id || session.user.email || "",
+        name: session.user.name || "User",
+        email: session.user.email || "",
+        image: session.user.image || undefined,
+        // Check if email is admin email
+        role: session.user.email === "admin@gmail.com" ? "admin" : "user",
+      }
+    : null
 
-  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+  const login = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" })
+  }
 
-    // Find user by email (password can be anything for demo)
-    const foundUser = DUMMY_USERS.find((u) => u.email.toLowerCase() === email.toLowerCase())
-
-    if (foundUser) {
-      setUser(foundUser)
-      localStorage.setItem("kmj_user", JSON.stringify(foundUser))
-      return true
-    }
-
-    // Create new user if not found
-    const newUser: User = {
-      id: Date.now().toString(),
-      name: email.split("@")[0],
-      email: email,
-      role: "user",
-    }
-    setUser(newUser)
-    localStorage.setItem("kmj_user", JSON.stringify(newUser))
-    return true
-  }, [])
-
-  const logout = useCallback(() => {
-    setUser(null)
-    localStorage.removeItem("kmj_user")
-    router.push("/")
-  }, [router])
+  const logout = async () => {
+    await signOut({ callbackUrl: "/" })
+  }
 
   return <AuthContext.Provider value={{ user, isLoading, login, logout }}>{children}</AuthContext.Provider>
 }
