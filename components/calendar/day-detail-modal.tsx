@@ -122,7 +122,7 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
   // Group participants by flight
   const groupedParticipants = participants.reduce(
     (acc, participant) => {
-      const flight = `${participant.flight} ${participant.flightCode}`
+      const flight = `${participant.flight} ${participant.flight_code}`
       if (!acc[flight]) {
         acc[flight] = []
       }
@@ -344,7 +344,7 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
                           <p className="font-medium text-sm text-foreground truncate">{participant.name}</p>
                           <p className="text-xs text-muted-foreground flex items-center gap-2">
                             <Clock className="h-3 w-3" />
-                            {participant.time}
+                            {participant.departure_time}
                             {participant.notes && <span className="text-accent">• {participant.notes}</span>}
                           </p>
                         </div>

@@ -75,7 +75,7 @@ export default function ParticipantsPage() {
   const filteredParticipants = participants.filter(
     (p) =>
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.email.toLowerCase().includes(searchQuery.toLowerCase()),
+      p.phone.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
   return (
@@ -130,7 +130,7 @@ export default function ParticipantsPage() {
                 {filteredParticipants.map((participant) => (
                   <TableRow key={participant.id}>
                     <TableCell className="font-medium">{participant.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{participant.email}</TableCell>
+                    <TableCell className="text-muted-foreground">{participant.phone}</TableCell>
                     <TableCell className="font-mono text-sm">{participant.phone}</TableCell>
                     <TableCell className="text-center">
                       <Badge variant="secondary">{participant.registrations}</Badge>

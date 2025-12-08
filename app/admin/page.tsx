@@ -67,10 +67,10 @@ const flightData = [
 ]
 
 const recentRegistrations = [
-  { name: "Rani Wijaya", date: "20 Jan", flight: "GA-123", time: "2 jam lalu" },
-  { name: "Budi Santoso", date: "22 Jan", flight: "JT-456", time: "4 jam lalu" },
-  { name: "Siti Nurhaliza", date: "21 Jan", flight: "ID-789", time: "6 jam lalu" },
-  { name: "Ahmad Fauzi", date: "23 Jan", flight: "GA-321", time: "8 jam lalu" },
+  { name: "Rani Wijaya", date: "20 Jan", flight: "GA-123", departure_time: "2 jam lalu" },
+  { name: "Budi Santoso", date: "22 Jan", flight: "JT-456", departure_time: "4 jam lalu" },
+  { name: "Siti Nurhaliza", date: "21 Jan", flight: "ID-789", departure_time: "6 jam lalu" },
+  { name: "Ahmad Fauzi", date: "23 Jan", flight: "GA-321", departure_time: "8 jam lalu" },
 ]
 
 export default function AdminDashboardPage() {
@@ -215,7 +215,7 @@ export default function AdminDashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs text-muted-foreground">{reg.time}</span>
+                  <span className="text-xs text-muted-foreground">{reg.departure_time}</span>
                 </div>
               ))}
             </div>
