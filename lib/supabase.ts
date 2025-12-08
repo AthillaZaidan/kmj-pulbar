@@ -70,9 +70,15 @@ export type Database = {
           user_id: string
           name: string
           phone: string
-          flight: string
-          flight_code: string
-          departure_time: string
+          transportation_type: 'flight' | 'bus'
+          origin_city: string
+          destination_city: string
+          flight: string | null
+          flight_code: string | null
+          flight_departure_time: string | null
+          bus_company: string | null
+          bus_ticket_type: string | null
+          bus_departure_time: string | null
           notes: string | null
           created_at: string
           updated_at: string
@@ -83,9 +89,15 @@ export type Database = {
           user_id: string
           name: string
           phone: string
-          flight: string
-          flight_code: string
-          departure_time: string
+          transportation_type: 'flight' | 'bus'
+          origin_city: string
+          destination_city: string
+          flight?: string | null
+          flight_code?: string | null
+          flight_departure_time?: string | null
+          bus_company?: string | null
+          bus_ticket_type?: string | null
+          bus_departure_time?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string
@@ -96,9 +108,15 @@ export type Database = {
           user_id?: string
           name?: string
           phone?: string
-          flight?: string
-          flight_code?: string
-          departure_time?: string
+          transportation_type?: 'flight' | 'bus'
+          origin_city?: string
+          destination_city?: string
+          flight?: string | null
+          flight_code?: string | null
+          flight_departure_time?: string | null
+          bus_company?: string | null
+          bus_ticket_type?: string | null
+          bus_departure_time?: string | null
           notes?: string | null
           created_at?: string
           updated_at?: string

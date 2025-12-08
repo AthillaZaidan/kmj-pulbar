@@ -31,7 +31,9 @@ export function StatsCards() {
       dateCounts[travelDate.date] = count
 
       travelDate.participants.forEach((p) => {
-        flightCounts[p.flight] = (flightCounts[p.flight] || 0) + 1
+        // Get transport key - either flight name or bus company
+        const transportKey = p.flight || p.bus_company || "Unknown"
+        flightCounts[transportKey] = (flightCounts[transportKey] || 0) + 1
       })
     })
 
