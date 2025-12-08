@@ -46,7 +46,7 @@ export default function LoginPage() {
 
         <div className="space-y-6">
           <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-accent/30">
-            <Image src="/images/logo.jpg" alt="KMJ ITB" fill className="object-cover" />
+            <Image src="/LOGO.jpg" alt="KMJ ITB" fill className="object-cover" />
           </div>
           <div>
             <h1 className="text-4xl font-bold text-primary-foreground">KMJ Pulang Bareng</h1>
@@ -67,7 +67,7 @@ export default function LoginPage() {
           <CardHeader className="space-y-1 text-center lg:text-left">
             <div className="lg:hidden flex justify-center mb-4">
               <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-primary/20">
-                <Image src="/images/logo.jpg" alt="KMJ ITB" fill className="object-cover" />
+                <Image src="/LOGO.jpg" alt="KMJ ITB" fill className="object-cover" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">Selamat Datang</CardTitle>

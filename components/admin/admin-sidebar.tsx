@@ -56,7 +56,7 @@ export function AdminSidebar() {
         <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
           <Link href="/admin" className="flex items-center gap-3">
             <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-              <Image src="/images/logo.jpg" alt="Logo KMJ ITB" fill className="object-cover" />
+              <Image src="/LOGO.jpg" alt="Logo KMJ ITB" fill className="object-cover" />
             </div>
             {!collapsed && (
               <div className="overflow-hidden">

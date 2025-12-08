@@ -26,7 +26,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden ring-2 ring-accent/30">
-              <Image src="/images/logo.jpg" alt="KMJ ITB" fill className="object-cover" />
+              <Image src="/LOGO.jpg" alt="KMJ ITB" fill className="object-cover" />
             </div>
             <span className="text-primary-foreground font-bold text-lg hidden sm:block">KMJ ITB</span>
           </Link>

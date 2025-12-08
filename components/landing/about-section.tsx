@@ -23,7 +23,7 @@ export function AboutSection() {
               {/* Main image container */}
               <div className="relative bg-secondary rounded-3xl overflow-hidden h-full flex items-center justify-center p-12">
                 <div className="relative w-48 h-48 md:w-64 md:h-64">
-                  <Image src="/images/logo.jpg" alt="KMJ ITB Logo" fill className="object-contain" />
+                  <Image src="/LOGO.jpg" alt="KMJ ITB Logo" fill className="object-contain" />
                 </div>
               </div>
             </div>

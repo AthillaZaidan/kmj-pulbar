@@ -73,7 +73,7 @@ export function HeroSection() {
             <div className="flex items-center gap-6 mb-8">
               <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden ring-4 ring-accent/30 shadow-2xl shadow-accent/20 flex-shrink-0">
                 <Image
-                  src="/images/logo.jpg"
+                  src="/LOGO.jpg"
                   alt="Logo Keluarga Mahasiswa Jambi ITB"
                   fill
                   className="object-cover"

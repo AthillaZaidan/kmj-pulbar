@@ -12,7 +12,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-6">
               <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-accent/30">
-                <Image src="/images/logo.jpg" alt="Logo KMJ ITB" fill className="object-cover" />
+                <Image src="/LOGO.jpg" alt="Logo KMJ ITB" fill className="object-cover" />
               </div>
               <div>
                 <h3 className="font-bold text-xl">KMJ ITB</h3>
