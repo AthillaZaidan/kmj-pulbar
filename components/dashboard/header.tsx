@@ -1,10 +1,8 @@
 "use client"
 
-import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Bell, Search, Plus, User, Settings, LogOut } from "lucide-react"
+import { Bell, Plus, User, Settings, LogOut } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
 interface HeaderProps {
@@ -22,7 +20,6 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle }: HeaderProps) {
-  const [searchQuery, setSearchQuery] = useState("")
   const { user, logout } = useAuth()
 
   return (
@@ -32,20 +29,6 @@ export function Header({ title, subtitle }: HeaderProps) {
         <div className="lg:ml-0 ml-12">
           <h1 className="text-xl font-bold text-card-foreground">{title}</h1>
           {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
-        </div>
-
-        {/* Center: Search */}
-        <div className="hidden md:flex flex-1 max-w-md">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Cari peserta atau tanggal..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-background border-input"
-            />
-          </div>
         </div>
 
         {/* Right: Actions */}

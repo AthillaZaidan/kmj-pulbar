@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useTravel } from "@/lib/travel-context"
 import { Header } from "@/components/dashboard/header"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -15,37 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Calendar, Plane, Clock, Edit, Trash2, Users, Download } from "lucide-react"
-
-interface Registration {
-  id: string
-  date: Date
-  flight: string
-  flightCode: string
-  time: string
-  notes?: string
-  fellowTravelers: number
-}
-
-const mockRegistrations: Registration[] = [
-  {
-    id: "1",
-    date: new Date(2025, 0, 20),
-    flight: "Garuda Indonesia",
-    flightCode: "GA-123",
-    time: "10:15",
-    notes: "Window seat",
-    fellowTravelers: 5,
-  },
-  {
-    id: "2",
-    date: new Date(2025, 0, 22),
-    flight: "Lion Air",
-    flightCode: "JT-456",
-    time: "14:30",
-    fellowTravelers: 8,
-  },
-]
+import { Calendar, Plane, Clock, Trash2, Users, Download, Loader2 } from "lucide-react"
 
 const MONTHS = [
   "Januari",
@@ -65,14 +37,54 @@ const MONTHS = [
 const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
 
 export default function MyRegistrationsPage() {
-  const [registrations, setRegistrations] = useState(mockRegistrations)
+  const { data: session } = useSession()
+  const { travelDates, removeParticipant, isLoading } = useTravel()
+  const [myRegistrations, setMyRegistrations] = useState<any[]>([])
 
-  const handleDelete = (id: string) => {
-    setRegistrations(registrations.filter((r) => r.id !== id))
+  useEffect(() => {
+    if (session?.user?.id && travelDates.length > 0) {
+      // Filter participants that belong to current user
+      const userRegs: any[] = []
+      travelDates.forEach((travelDate) => {
+        travelDate.participants.forEach((participant) => {
+          if (participant.user_id === session.user.id) {
+            userRegs.push({
+              ...participant,
+              date: travelDate.date,
+              travelDateId: travelDate.id,
+              fellowTravelers: travelDate.participants.length,
+            })
+          }
+        })
+      })
+      // Sort by date ascending
+      userRegs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      setMyRegistrations(userRegs)
+    }
+  }, [session, travelDates])
+
+  const handleDelete = async (participantId: string) => {
+    try {
+      await removeParticipant(participantId)
+    } catch (error) {
+      console.error("Error deleting registration:", error)
+    }
   }
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
     return `${DAYS[date.getDay()]}, ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-screen">
+        <Header title="Pendaftaran Saya" subtitle="Kelola semua pendaftaran keberangkatan Anda" />
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -80,7 +92,7 @@ export default function MyRegistrationsPage() {
       <Header title="Pendaftaran Saya" subtitle="Kelola semua pendaftaran keberangkatan Anda" />
 
       <div className="flex-1 overflow-auto p-6">
-        {registrations.length === 0 ? (
+        {myRegistrations.length === 0 ? (
           <Card className="bg-card border-border">
             <CardContent className="flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
@@ -104,9 +116,9 @@ export default function MyRegistrationsPage() {
                     <Calendar className="h-6 w-6 text-accent" />
                   </div>
                   <div>
-                    <p className="font-semibold text-card-foreground">{registrations.length} Pendaftaran Aktif</p>
+                    <p className="font-semibold text-card-foreground">{myRegistrations.length} Pendaftaran Aktif</p>
                     <p className="text-sm text-muted-foreground">
-                      Keberangkatan terdekat: {formatDate(registrations[0].date)}
+                      Keberangkatan terdekat: {formatDate(myRegistrations[0].date)}
                     </p>
                   </div>
                 </div>
@@ -119,7 +131,7 @@ export default function MyRegistrationsPage() {
 
             {/* Registration Cards */}
             <div className="grid gap-4">
-              {registrations.map((registration) => (
+              {myRegistrations.map((registration) => (
                 <Card key={registration.id} className="bg-card border-border overflow-hidden">
                   <div className="flex">
                     {/* Left accent bar */}
@@ -138,11 +150,11 @@ export default function MyRegistrationsPage() {
                             <span className="flex items-center gap-1.5 text-muted-foreground">
                               <Plane className="h-4 w-4" />
                               {registration.flight}
-                              <span className="font-mono text-foreground">({registration.flightCode})</span>
+                              <span className="font-mono text-foreground">({registration.flight_code})</span>
                             </span>
                             <span className="flex items-center gap-1.5 text-muted-foreground">
                               <Clock className="h-4 w-4" />
-                              <span className="font-mono text-foreground">{registration.time}</span>
+                              <span className="font-mono text-foreground">{registration.departure_time}</span>
                             </span>
                             <span className="flex items-center gap-1.5 text-muted-foreground">
                               <Users className="h-4 w-4" />
@@ -159,11 +171,6 @@ export default function MyRegistrationsPage() {
 
                         {/* Actions */}
                         <div className="flex items-center gap-2">
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
-                          </Button>
-
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button

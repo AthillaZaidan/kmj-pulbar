@@ -11,11 +11,9 @@ import {
   Calendar,
   ClipboardList,
   User,
-  Settings,
   LogOut,
   ChevronLeft,
   Menu,
-  HelpCircle,
 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
@@ -24,11 +22,6 @@ const navItems = [
   { href: "/dashboard/calendar", label: "Kalender", icon: Calendar },
   { href: "/dashboard/my-registrations", label: "Pendaftaran Saya", icon: ClipboardList },
   { href: "/dashboard/profile", label: "Profil", icon: User },
-]
-
-const bottomNavItems = [
-  { href: "/dashboard/settings", label: "Pengaturan", icon: Settings },
-  { href: "/dashboard/help", label: "Bantuan", icon: HelpCircle },
 ]
 
 export function Sidebar() {
@@ -77,7 +70,7 @@ export function Sidebar() {
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+            const isActive = pathname === item.href
             return (
               <Link
                 key={item.href}
@@ -98,25 +91,6 @@ export function Sidebar() {
 
         {/* Bottom Navigation */}
         <div className="p-4 border-t border-sidebar-border space-y-2">
-          {bottomNavItems.map((item) => {
-            const isActive = pathname === item.href
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors",
-                  isActive
-                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-                )}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {!collapsed && <span className="text-sm font-medium">{item.label}</span>}
-              </Link>
-            )
-          })}
-
           <Button
             variant="ghost"
             onClick={logout}
