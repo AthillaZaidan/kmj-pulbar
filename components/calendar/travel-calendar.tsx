@@ -88,28 +88,28 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
   }
 
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
+    <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
       {/* Calendar Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={goToToday}>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border-b border-border gap-3 sm:gap-0 bg-linear-to-r from-primary/5 to-transparent">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={goToToday} className="text-xs sm:text-sm h-8 sm:h-9">
             Hari Ini
           </Button>
           <div className="flex items-center">
-            <Button variant="ghost" size="icon" onClick={goToPreviousMonth}>
-              <ChevronLeft className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={goToPreviousMonth} className="h-8 w-8 sm:h-9 sm:w-9">
+              <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={goToNextMonth}>
-              <ChevronRight className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={goToNextMonth} className="h-8 w-8 sm:h-9 sm:w-9">
+              <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>
 
-        <h2 className="text-lg font-semibold text-card-foreground">
+        <h2 className="text-base sm:text-lg font-semibold text-card-foreground">
           {MONTHS[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h2>
 
-        <div className="flex items-center gap-4 text-xs">
+        <div className="hidden lg:flex items-center gap-3 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded bg-green-100 border border-green-300" />
             <span className="text-muted-foreground">Tersedia</span>
@@ -123,13 +123,30 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
             <span className="text-muted-foreground">Penuh</span>
           </div>
         </div>
+        
+        {/* Mobile Legend */}
+        <div className="flex lg:hidden items-center gap-2 text-xs w-full justify-center">
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded bg-green-100 border border-green-300" />
+            <span className="text-muted-foreground text-[10px]">Tersedia</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded bg-yellow-100 border border-yellow-300" />
+            <span className="text-muted-foreground text-[10px]">Hampir</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded bg-red-100 border border-red-300" />
+            <span className="text-muted-foreground text-[10px]">Penuh</span>
+          </div>
+        </div>
       </div>
 
       {/* Day Headers */}
-      <div className="grid grid-cols-7 border-b border-border">
+      <div className="grid grid-cols-7 border-b border-border bg-muted/20">
         {DAYS.map((day) => (
-          <div key={day} className="py-3 text-center text-sm font-medium text-muted-foreground">
-            {day}
+          <div key={day} className="py-2 sm:py-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">
+            <span className="hidden sm:inline">{day}</span>
+            <span className="sm:hidden">{day.charAt(0)}</span>
           </div>
         ))}
       </div>
@@ -138,7 +155,7 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
       <div className="grid grid-cols-7">
         {/* Empty cells for days before the first of the month */}
         {Array.from({ length: startingDay }).map((_, index) => (
-          <div key={`empty-${index}`} className="min-h-[120px] p-2 border-b border-r border-border bg-muted/30" />
+          <div key={`empty-${index}`} className="min-h-20 sm:min-h-[120px] p-1.5 sm:p-2 border-b border-r border-border bg-muted/30" />
         ))}
 
         {/* Days of the month */}
@@ -155,9 +172,10 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
             <div
               key={day}
               className={cn(
-                "min-h-[120px] p-2 border-b border-r border-border cursor-pointer transition-all group relative",
+                "min-h-20 sm:min-h-[120px] p-1.5 sm:p-2 border-b border-r border-border cursor-pointer transition-all group relative",
                 "hover:bg-accent/10 hover:shadow-md hover:scale-[1.02]",
-                "active:scale-[0.98]",
+                "active:scale-[0.98] active:shadow-inner",
+                "touch-manipulation",
                 isSelected && "bg-accent/10 ring-2 ring-accent ring-inset",
               )}
               onClick={(e) => {
@@ -166,11 +184,11 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
                 onDateSelect(date, travelDate)
               }}
             >
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex justify-between items-start mb-1 sm:mb-2">
                 <span
                   className={cn(
-                    "inline-flex items-center justify-center w-7 h-7 rounded-full text-sm transition-colors",
-                    isToday && "bg-accent text-accent-foreground font-bold",
+                    "inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-xs sm:text-sm transition-colors font-medium",
+                    isToday && "bg-accent text-accent-foreground font-bold ring-2 ring-accent/30 ring-offset-1",
                     !isToday && "text-card-foreground group-hover:bg-primary/10",
                   )}
                 >
@@ -179,14 +197,14 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
                 {hasParticipants ? (
                   <span
                     className={cn(
-                      "text-xs px-2 py-0.5 rounded-full border",
+                      "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full border font-medium",
                       getCapacityColor(travelDate.participants.length, travelDate.capacity, travelDate.isAvailable),
                     )}
                   >
                     {travelDate.participants.length}/{travelDate.capacity}
                   </span>
                 ) : (
-                  <span className="text-xs px-2 py-0.5 rounded-full border border-dashed border-muted-foreground/30 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                  <span className="hidden sm:flex text-xs px-2 py-0.5 rounded-full border border-dashed border-muted-foreground/30 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity items-center gap-1">
                     <Plus className="h-3 w-3" />
                     Tambah
                   </span>
@@ -195,33 +213,33 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
 
               {/* Flight info cards */}
               {hasParticipants && travelDate.isAvailable && (
-                <div className="space-y-1">
+                <div className="space-y-0.5 sm:space-y-1">
                   {flights.slice(0, 2).map((flight, i) => (
-                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 bg-primary/5 rounded text-xs">
+                    <div key={i} className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-primary/5 rounded text-[10px] sm:text-xs">
                       <div
                         className={cn(
-                          "w-1.5 h-1.5 rounded-full",
+                          "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0",
                           i === 0 ? "bg-accent" : i === 1 ? "bg-primary" : "bg-muted-foreground",
                         )}
                       />
-                      <span className="truncate text-card-foreground">{flight.airline}</span>
-                      <span className="text-muted-foreground ml-auto">{flight.count}</span>
+                      <span className="truncate text-card-foreground font-medium">{flight.airline}</span>
+                      <span className="text-muted-foreground ml-auto text-[9px] sm:text-xs font-semibold">{flight.count}</span>
                     </div>
                   ))}
                   {flights.length > 2 && (
-                    <p className="text-xs text-muted-foreground px-2">+{flights.length - 2} lainnya</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground px-1.5 sm:px-2 font-medium">+{flights.length - 2} lainnya</p>
                   )}
                 </div>
               )}
 
               {travelDate && !travelDate.isAvailable && (
-                <div className="mt-2 px-2 py-1 bg-muted rounded text-xs text-muted-foreground text-center">Penuh</div>
+                <div className="mt-1 sm:mt-2 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-muted rounded text-[10px] sm:text-xs text-muted-foreground text-center font-medium">Penuh</div>
               )}
 
               {/* Empty state hint */}
               {!hasParticipants && (
-                <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <p className="text-xs text-muted-foreground text-center">Klik untuk mendaftar</p>
+                <div className="mt-2 sm:mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground text-center">Klik untuk mendaftar</p>
                 </div>
               )}
             </div>
@@ -230,7 +248,7 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
 
         {/* Empty cells after the last day */}
         {Array.from({ length: (7 - ((startingDay + daysInMonth) % 7)) % 7 }).map((_, index) => (
-          <div key={`empty-end-${index}`} className="min-h-[120px] p-2 border-b border-r border-border bg-muted/30" />
+          <div key={`empty-end-${index}`} className="min-h-20 sm:min-h-[120px] p-1.5 sm:p-2 border-b border-r border-border bg-muted/30" />
         ))}
       </div>
     </div>

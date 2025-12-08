@@ -93,14 +93,6 @@ export function HeroSection() {
               mahasiswa Jambi.
             </h1>
 
-            {/* CTA Button */}
-            <Button
-              asChild
-              size="lg"
-              className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-6 text-base rounded-full"
-            >
-              <Link href="/signup">DAFTAR SEKARANG</Link>
-            </Button>
           </div>
 
           {/* Right Side - Stats */}
