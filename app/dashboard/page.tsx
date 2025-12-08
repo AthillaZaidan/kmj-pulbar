@@ -75,13 +75,12 @@ export default function DashboardPage() {
     setIsRegistering(true)
     await new Promise((resolve) => setTimeout(resolve, 800))
 
-    const airlineName = selectedAirline === "other" ? customAirline : selectedAirline
     const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
 
     addParticipant(dateStr, {
       name: participantName || user?.name || "Anonymous",
       email: participantEmail || user?.email || "anonymous@gmail.com",
-      flight: airlineName,
+      flight: selectedAirline,
       flightCode: flightCode,
       time: departureTime,
       notes: notes || undefined,
@@ -179,28 +178,19 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Maskapai</Label>
-                      <Select value={selectedAirline} onValueChange={(v) => { setSelectedAirline(v); setShowOtherInput(v === "other") }}>
-                        <SelectTrigger><SelectValue placeholder="Pilih maskapai" /></SelectTrigger>
-                        <SelectContent>
-                          {airlines.map((airline) => (
-                            <SelectItem key={airline.value} value={airline.value}>{airline.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="airline">Maskapai</Label>
+                      <Input 
+                        id="airline"
+                        placeholder="e.g., Garuda Indonesia, Lion Air, Batik Air" 
+                        value={selectedAirline} 
+                        onChange={(e) => setSelectedAirline(e.target.value)} 
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="flightCode">Kode Penerbangan</Label>
                       <Input id="flightCode" placeholder="GA-123" value={flightCode} onChange={(e) => setFlightCode(e.target.value)} />
                     </div>
                   </div>
-
-                  {showOtherInput && (
-                    <div className="space-y-2">
-                      <Label htmlFor="customAirline">Nama Maskapai</Label>
-                      <Input id="customAirline" placeholder="Masukkan nama maskapai" value={customAirline} onChange={(e) => setCustomAirline(e.target.value)} />
-                    </div>
-                  )}
 
                   <div className="space-y-2">
                     <Label htmlFor="time">Waktu Keberangkatan</Label>
