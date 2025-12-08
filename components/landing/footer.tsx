@@ -58,22 +58,13 @@ export function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:internal@kmjitb.org"
-                  className="flex items-center gap-3 text-primary-foreground/70 hover:text-accent transition-colors"
-                >
-                  <Mail className="h-5 w-5 text-accent" />
-                  internal@kmjitb.org
-                </a>
-              </li>
-              <li>
-                <a
                   href="https://instagram.com/kmj_itb"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-primary-foreground/70 hover:text-accent transition-colors"
                 >
                   <Instagram className="h-5 w-5 text-accent" />
-                  @kmj_itb
+                  @kmjitb
                 </a>
               </li>
               <li>
@@ -89,7 +80,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-primary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-primary-foreground/50 text-sm">
-            © {new Date().getFullYear()} Keluarga Mahasiswa Jambi ITB. All rights reserved.
+            © {new Date().getFullYear()} Internal Keluarga Mahasiswa Jambi ITB. All rights reserved.
           </p>
           <p className="text-primary-foreground/50 text-sm">Dibuat dengan oleh Bidang Internal KMJ ITB</p>
         </div>

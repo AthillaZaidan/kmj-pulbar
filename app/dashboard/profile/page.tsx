@@ -100,7 +100,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Nomor Telepon</Label>
+                  <Label htmlFor="phone">Nomor Telepon/ID Line</Label>
                   <Input
                     id="phone"
                     type="tel"

@@ -2,11 +2,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const faqs = [
   {
-    question: "Siapa yang bisa mendaftar Pulang Bareng?",
-    answer:
-      "Pulang Bareng terbuka untuk semua anggota Keluarga Mahasiswa Jambi ITB. Pendaftaran memerlukan email ITB yang valid (@students.itb.ac.id) untuk verifikasi.",
-  },
-  {
     question: "Apakah saya bisa mengubah tanggal setelah mendaftar?",
     answer:
       "Ya, Anda dapat mengubah atau membatalkan pendaftaran kapan saja melalui halaman 'Pendaftaran Saya'. Perubahan akan langsung tercatat di sistem.",

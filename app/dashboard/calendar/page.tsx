@@ -36,13 +36,11 @@ export default function CalendarPage() {
   const [isRegistering, setIsRegistering] = useState(false)
   const [isRegistered, setIsRegistered] = useState(false)
   const [selectedAirline, setSelectedAirline] = useState("")
-  const [departureTime, setDepartureTime] = useState("")
+  const [phone, setPhone] = useState("")
   const [flightCode, setFlightCode] = useState("")
+  const [departureTime, setDepartureTime] = useState("")
   const [notes, setNotes] = useState("")
-  const [showOtherInput, setShowOtherInput] = useState(false)
-  const [customAirline, setCustomAirline] = useState("")
   const [participantName, setParticipantName] = useState("")
-  const [participantEmail, setParticipantEmail] = useState("")
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -51,13 +49,11 @@ export default function CalendarPage() {
 
   const resetForm = () => {
     setSelectedAirline("")
-    setDepartureTime("")
+    setPhone("")
     setFlightCode("")
+    setDepartureTime("")
     setNotes("")
-    setCustomAirline("")
-    setShowOtherInput(false)
     setParticipantName("")
-    setParticipantEmail("")
     setIsRegistered(false)
   }
 
@@ -72,21 +68,25 @@ export default function CalendarPage() {
     if (!selectedDate) return
     
     setIsRegistering(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
 
     const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
 
-    addParticipant(dateStr, {
-      name: participantName || user?.name || "Anonymous",
-      email: participantEmail || user?.email || "anonymous@gmail.com",
-      flight: selectedAirline,
-      flightCode: flightCode,
-      time: departureTime,
-      notes: notes || undefined,
-    })
+    try {
+      await addParticipant(dateStr, {
+        name: participantName || user?.name || "Anonymous",
+        phone: phone,
+        flight: selectedAirline,
+        flight_code: flightCode,
+        departure_time: departureTime,
+        notes: notes || undefined,
+      })
 
-    setIsRegistering(false)
-    setIsRegistered(true)
+      setIsRegistering(false)
+      setIsRegistered(true)
+    } catch (error: any) {
+      setIsRegistering(false)
+      alert(error.message || "Gagal mendaftar. Silakan coba lagi.")
+    }
   }
 
   // Get travel data for selected date
@@ -100,7 +100,7 @@ export default function CalendarPage() {
     : ""
 
   const groupedParticipants = participants.reduce((acc, participant) => {
-    const flight = `${participant.flight} ${participant.flightCode}`
+    const flight = participant.flight
     if (!acc[flight]) acc[flight] = []
     acc[flight].push(participant)
     return acc
@@ -159,38 +159,60 @@ export default function CalendarPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Nama Lengkap</Label>
-                      <Input id="name" placeholder="Nama lengkap" value={participantName} onChange={(e) => setParticipantName(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="email@gmail.com" value={participantEmail} onChange={(e) => setParticipantEmail(e.target.value)} />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="airline">Maskapai</Label>
-                      <Input 
-                        id="airline"
-                        placeholder="e.g., Garuda Indonesia, Lion Air, Batik Air" 
-                        value={selectedAirline} 
-                        onChange={(e) => setSelectedAirline(e.target.value)} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="flightCode">Kode Penerbangan</Label>
-                      <Input id="flightCode" placeholder="GA-123" value={flightCode} onChange={(e) => setFlightCode(e.target.value)} />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nama Lengkap <span className="text-red-500">*</span></Label>
+                    <Input 
+                      id="name" 
+                      placeholder="Nama lengkap" 
+                      value={participantName} 
+                      onChange={(e) => setParticipantName(e.target.value)} 
+                      required
+                    />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="time">Waktu Keberangkatan</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input id="time" type="time" className="pl-10" value={departureTime} onChange={(e) => setDepartureTime(e.target.value)} />
+                    <Label htmlFor="phone">Nomor Telepon/ID Line <span className="text-red-500">*</span></Label>
+                    <Input 
+                      id="phone" 
+                      type="tel" 
+                      placeholder="08123456789" 
+                      value={phone} 
+                      onChange={(e) => setPhone(e.target.value)} 
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="airline">Maskapai <span className="text-red-500">*</span></Label>
+                    <Input 
+                      id="airline"
+                      placeholder="e.g., Garuda Indonesia, Lion Air, Batik Air" 
+                      value={selectedAirline} 
+                      onChange={(e) => setSelectedAirline(e.target.value)} 
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="flightCode">Kode Penerbangan <span className="text-red-500">*</span></Label>
+                      <Input 
+                        id="flightCode" 
+                        placeholder="GA-123" 
+                        value={flightCode} 
+                        onChange={(e) => setFlightCode(e.target.value)} 
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time">Jam Keberangkatan <span className="text-red-500">*</span></Label>
+                      <Input 
+                        id="time" 
+                        type="time" 
+                        value={departureTime} 
+                        onChange={(e) => setDepartureTime(e.target.value)} 
+                        required
+                      />
                     </div>
                   </div>
 
@@ -230,10 +252,11 @@ export default function CalendarPage() {
                           <div key={p.id} className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg">
                             <div>
                               <p className="font-medium text-sm">{p.name}</p>
-                              <p className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" />{p.time}</p>
+                              <p className="text-xs text-muted-foreground">{p.phone}</p>
+                              <p className="text-xs text-muted-foreground">{p.flight_code} • {p.departure_time}</p>
                             </div>
-                            {user?.email === p.email && (
-                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeParticipant(dateStr, p.id)}>
+                            {user?.id === p.user_id && (
+                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeParticipant(p.id)}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             )}

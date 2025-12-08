@@ -99,12 +99,6 @@ export default function LoginPage() {
               </svg>
               Masuk dengan Google
             </Button>
-
-            <div className="text-center text-sm text-muted-foreground">
-              <p className="mt-4 p-3 bg-muted rounded-lg">
-                Gunakan akun Google ITB (@students.itb.ac.id) atau akun Google lainnya untuk masuk.
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>
