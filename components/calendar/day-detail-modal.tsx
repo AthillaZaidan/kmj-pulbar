@@ -97,10 +97,10 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
 
     addParticipant(dateStr, {
       name: participantName || user?.name || "Anonymous",
-      email: participantEmail || user?.email || "anonymous@gmail.com",
+      phone: participantEmail || user?.email || "no-phone",
       flight: airlineName,
-      flightCode: flightCode,
-      time: departureTime,
+      flight_code: flightCode,
+      departure_time: departureTime,
       notes: notes || undefined,
     })
 
