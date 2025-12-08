@@ -109,7 +109,7 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
   }
 
   const handleRemoveParticipant = (participantId: string) => {
-    removeParticipant(dateStr, participantId)
+    removeParticipant(participantId)
   }
 
   const handleClose = (openState: boolean) => {
