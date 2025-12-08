@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: session.user.email || "",
         image: session.user.image || undefined,
         // Check if email is admin email
-        role: session.user.email === "admin@gmail.com" ? "admin" : "user",
+        role: session.user.email === "athillazaidanstudy@gmail.com" ? "admin" : "user",
       }
     : null
 

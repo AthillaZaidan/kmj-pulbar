@@ -27,7 +27,12 @@ const navItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
+
+  // Filter nav items based on user role
+  const filteredNavItems = user?.role === "admin" 
+    ? navItems 
+    : navItems.filter(item => item.href !== "/dashboard")
 
   return (
     <>
@@ -69,7 +74,7 @@ export function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
-          {navItems.map((item) => {
+          {filteredNavItems.map((item) => {
             const isActive = pathname === item.href
             return (
               <Link

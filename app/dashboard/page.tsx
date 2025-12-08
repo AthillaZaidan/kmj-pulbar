@@ -112,7 +112,7 @@ export default function DashboardPage() {
       <Header title="Dashboard" subtitle={`Selamat datang, ${user?.name || 'User'}! Pilih tanggal keberangkatan Anda.`} />
 
       <div className="flex-1 overflow-auto p-6 space-y-6">
-        <StatsCards />
+        {user?.role === "admin" && <StatsCards />}
 
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">Kalender Keberangkatan</h2>
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                               <p className="text-xs text-muted-foreground">{p.phone}</p>
                               <p className="text-xs text-muted-foreground">{p.flight_code} • {p.departure_time}</p>
                             </div>
-                            {user?.id === p.user_id && (
+                            {(user?.id === p.user_id || user?.role === "admin") && (
                               <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeParticipant(p.id)}>
                                 <Trash2 className="h-4 w-4" />
                               </Button>

@@ -29,8 +29,8 @@ export const authOptions: NextAuthOptions = {
           return false
         }
 
-        // Determine role - admin if email is admin@gmail.com
-        const role = user.email === "admin@gmail.com" ? "admin" : "user"
+        // Determine role - admin if email is athillazaidanstudy@gmail.com
+        const role = user.email === "athillazaidanstudy@gmail.com" ? "admin" : "user"
 
         if (!existingUser) {
           // Create new user - use email as ID for consistency
