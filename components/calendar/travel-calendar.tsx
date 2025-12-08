@@ -109,36 +109,7 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
           {MONTHS[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h2>
 
-        <div className="hidden lg:flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-green-100 border border-green-300" />
-            <span className="text-muted-foreground">Tersedia</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-yellow-100 border border-yellow-300" />
-            <span className="text-muted-foreground">Hampir Penuh</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-red-100 border border-red-300" />
-            <span className="text-muted-foreground">Penuh</span>
-          </div>
-        </div>
-        
-        {/* Mobile Legend */}
-        <div className="flex lg:hidden items-center gap-2 text-xs w-full justify-center">
-          <div className="flex items-center gap-1">
-            <div className="w-2.5 h-2.5 rounded bg-green-100 border border-green-300" />
-            <span className="text-muted-foreground text-[10px]">Tersedia</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2.5 h-2.5 rounded bg-yellow-100 border border-yellow-300" />
-            <span className="text-muted-foreground text-[10px]">Hampir</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2.5 h-2.5 rounded bg-red-100 border border-red-300" />
-            <span className="text-muted-foreground text-[10px]">Penuh</span>
-          </div>
-        </div>
+        <div className="w-20 sm:w-32" />
       </div>
 
       {/* Day Headers */}
@@ -195,13 +166,8 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
                   {day}
                 </span>
                 {hasParticipants ? (
-                  <span
-                    className={cn(
-                      "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full border font-medium",
-                      getCapacityColor(travelDate.participants.length, travelDate.capacity, travelDate.isAvailable),
-                    )}
-                  >
-                    {travelDate.participants.length}/{travelDate.capacity}
+                  <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full border font-medium bg-blue-100 text-blue-700 border-blue-300">
+                    {travelDate.participants.length}
                   </span>
                 ) : (
                   <span className="hidden sm:flex text-xs px-2 py-0.5 rounded-full border border-dashed border-muted-foreground/30 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity items-center gap-1">
@@ -212,7 +178,7 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
               </div>
 
               {/* Flight info cards */}
-              {hasParticipants && travelDate.isAvailable && (
+              {hasParticipants && (
                 <div className="space-y-0.5 sm:space-y-1">
                   {flights.slice(0, 2).map((flight, i) => (
                     <div key={i} className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-primary/5 rounded text-[10px] sm:text-xs">
@@ -230,10 +196,6 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
                     <p className="text-[10px] sm:text-xs text-muted-foreground px-1.5 sm:px-2 font-medium">+{flights.length - 2} lainnya</p>
                   )}
                 </div>
-              )}
-
-              {travelDate && !travelDate.isAvailable && (
-                <div className="mt-1 sm:mt-2 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-muted rounded text-[10px] sm:text-xs text-muted-foreground text-center font-medium">Penuh</div>
               )}
 
               {/* Empty state hint */}

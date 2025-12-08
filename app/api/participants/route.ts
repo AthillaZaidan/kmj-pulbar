@@ -83,16 +83,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Travel date not found" }, { status: 404 })
     }
 
-    if (!travelDate.is_available) {
-      return NextResponse.json({ error: "Travel date is not available" }, { status: 400 })
-    }
-
-    // Check capacity
-    const currentParticipants = travelDate.participants?.[0]?.count || 0
-    if (currentParticipants >= travelDate.capacity) {
-      return NextResponse.json({ error: "Travel date is full" }, { status: 400 })
-    }
-
     // Check if user already registered for this date
     const { data: existingRegistration } = await supabase
       .from("participants")
@@ -124,14 +114,6 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error("Error creating participant:", error)
       return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    // Update travel date availability if full
-    if (currentParticipants + 1 >= travelDate.capacity) {
-      await supabase
-        .from("travel_dates")
-        .update({ is_available: false })
-        .eq("id", travel_date_id)
     }
 
     return NextResponse.json({ data }, { status: 201 })
