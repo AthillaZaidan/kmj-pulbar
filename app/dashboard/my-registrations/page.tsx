@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { useTravel } from "@/lib/travel-context"
+import Link from "next/link"
 import { Header } from "@/components/dashboard/header"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -103,7 +104,9 @@ export default function MyRegistrationsPage() {
                 Anda belum mendaftar untuk tanggal keberangkatan manapun. Pilih tanggal di kalender untuk mulai
                 mendaftar.
               </p>
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">Lihat Kalender</Button>
+              <Link href="/dashboard/calendar">
+                <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">Lihat Kalender</Button>
+              </Link>
             </CardContent>
           </Card>
         ) : (

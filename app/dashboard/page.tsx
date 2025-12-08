@@ -121,22 +121,22 @@ export default function DashboardPage() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col w-[95vw] sm:w-full">
           <DialogHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-accent" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
               </div>
-              <div>
-                <DialogTitle className="text-xl">{formattedDate}</DialogTitle>
+              <div className="min-w-0">
+                <DialogTitle className="text-base sm:text-xl truncate">{formattedDate}</DialogTitle>
                 <DialogDescription>
-                  <span className="flex items-center gap-4 mt-1">
+                  <span className="flex items-center gap-2 sm:gap-4 mt-1 text-xs sm:text-sm">
                     <span className="flex items-center gap-1">
-                      <Users className="h-3.5 w-3.5" />
+                      <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       {participants.length} Peserta
                     </span>
                     <span className="flex items-center gap-1">
-                      <Plane className="h-3.5 w-3.5" />
+                      <Plane className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       {Object.keys(groupedParticipants).length} Penerbangan
                     </span>
                   </span>
@@ -164,20 +164,21 @@ export default function DashboardPage() {
                   <Button variant="outline" onClick={() => setIsRegistered(false)}>Daftar Lagi</Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nama Lengkap <span className="text-red-500">*</span></Label>
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 px-1">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="name" className="text-sm">Nama Lengkap <span className="text-red-500">*</span></Label>
                     <Input 
                       id="name" 
                       placeholder="Nama lengkap" 
                       value={participantName} 
                       onChange={(e) => setParticipantName(e.target.value)} 
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Nomor Telepon/ID Line <span className="text-red-500">*</span></Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="phone" className="text-sm">Nomor Telepon/ID Line <span className="text-red-500">*</span></Label>
                     <Input 
                       id="phone" 
                       type="tel" 
@@ -185,49 +186,60 @@ export default function DashboardPage() {
                       value={phone} 
                       onChange={(e) => setPhone(e.target.value)} 
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="airline">Maskapai <span className="text-red-500">*</span></Label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="airline" className="text-sm">Maskapai <span className="text-red-500">*</span></Label>
                     <Input 
                       id="airline"
                       placeholder="e.g., Garuda Indonesia, Lion Air, Batik Air" 
                       value={selectedAirline} 
                       onChange={(e) => setSelectedAirline(e.target.value)} 
                       required
+                      className="text-sm sm:text-base"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="flightCode">Kode Penerbangan <span className="text-red-500">*</span></Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="flightCode" className="text-sm">Kode Penerbangan <span className="text-red-500">*</span></Label>
                       <Input 
                         id="flightCode" 
                         placeholder="GA-123" 
                         value={flightCode} 
                         onChange={(e) => setFlightCode(e.target.value)} 
                         required
+                        className="text-sm sm:text-base"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="time">Jam Keberangkatan <span className="text-red-500">*</span></Label>
+                    <div className="space-y-1.5 sm:space-y-2">
+                      <Label htmlFor="time" className="text-sm">Jam Keberangkatan <span className="text-red-500">*</span></Label>
                       <Input 
                         id="time" 
                         type="time" 
                         value={departureTime} 
                         onChange={(e) => setDepartureTime(e.target.value)} 
                         required
+                        className="text-sm sm:text-base"
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">Catatan (Opsional)</Label>
-                    <Textarea id="notes" placeholder="Contoh: Window seat, extra baggage, dll." value={notes} onChange={(e) => setNotes(e.target.value)} />
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="notes" className="text-sm">Catatan (Opsional)</Label>
+                    <Textarea 
+                      id="notes" 
+                      placeholder="Contoh: Window seat, extra baggage, dll." 
+                      value={notes} 
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="text-sm sm:text-base resize-none"
+                      rows={3}
+                    />
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-2 sm:pt-4">
                     <Button type="button" variant="outline" className="flex-1" onClick={handleClose}>Batal</Button>
                     <Button type="submit" className="flex-1 bg-accent hover:bg-accent/90" disabled={isRegistering}>
                       {isRegistering ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Mendaftar...</>) : "Daftar"}

@@ -37,18 +37,20 @@ export function Sidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-      <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-sidebar rounded-lg text-sidebar-foreground"
-        onClick={() => setCollapsed(!collapsed)}
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+      {collapsed && (
+        <button
+          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-sidebar rounded-lg text-sidebar-foreground"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      )}
 
       {/* Sidebar */}
       <aside
         className={cn(
           "fixed lg:static inset-y-0 left-0 z-40 flex flex-col bg-sidebar text-sidebar-foreground transition-all duration-300",
-          collapsed ? "w-20 -translate-x-full lg:translate-x-0" : "w-64 translate-x-0",
+          collapsed ? "-translate-x-full lg:translate-x-0 lg:w-20" : "translate-x-0 w-64",
         )}
       >
         {/* Header */}

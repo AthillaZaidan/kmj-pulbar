@@ -29,7 +29,7 @@ const navItems = [
   { href: "/admin/reports", label: "Laporan", icon: FileText },
 ]
 
-const bottomNavItems = [{ href: "/admin/settings", label: "Pengaturan", icon: Settings }]
+const bottomNavItems = [{ href: "/dashboard/profile", label: "Pengaturan", icon: Settings }]
 
 export function AdminSidebar() {
   const pathname = usePathname()

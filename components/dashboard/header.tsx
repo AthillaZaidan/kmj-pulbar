@@ -33,16 +33,6 @@ export function Header({ title, subtitle }: HeaderProps) {
 
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
-          <Button size="sm" className="hidden sm:flex bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Plus className="h-4 w-4 mr-2" />
-            Daftar Hari
-          </Button>
-
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full" />
-          </Button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
@@ -70,7 +60,7 @@ export function Header({ title, subtitle }: HeaderProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings" className="cursor-pointer">
+                <Link href="/dashboard/profile" className="cursor-pointer">
                   <Settings className="h-4 w-4 mr-2" />
                   Pengaturan
                 </Link>
