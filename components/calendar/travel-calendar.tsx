@@ -59,7 +59,16 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
   const getFlightSummary = (participants: TravelDate["participants"]) => {
     const flights: Record<string, number> = {}
     participants.forEach((p) => {
-      flights[p.flight] = (flights[p.flight] || 0) + 1
+      // Determine the key based on what data is actually available
+      let flightKey: string
+      if (p.transportation_type === 'flight' || p.flight) {
+        flightKey = p.flight || "Pesawat"
+      } else if (p.transportation_type === 'bus' || p.bus_company) {
+        flightKey = p.bus_company || "Bus"
+      } else {
+        flightKey = "Unknown"
+      }
+      flights[flightKey] = (flights[flightKey] || 0) + 1
     })
     return Object.entries(flights).map(([airline, count]) => ({ airline, count }))
   }

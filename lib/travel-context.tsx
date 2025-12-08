@@ -7,9 +7,20 @@ export interface Participant {
   id: string
   name: string
   phone: string
-  flight: string
-  flight_code: string
-  departure_time: string
+  transportation_type?: 'flight' | 'bus'  // Made optional for backward compatibility
+  origin_city?: string  // Made optional for old data
+  destination_city?: string  // Made optional for old data
+  
+  // Flight fields
+  flight?: string
+  flight_code?: string
+  flight_departure_time?: string
+  
+  // Bus fields
+  bus_company?: string
+  bus_ticket_type?: string
+  bus_departure_time?: string
+  
   notes?: string
   user_id: string
   created_at?: string
@@ -68,9 +79,15 @@ export function TravelProvider({ children }: { children: ReactNode }) {
           id: p.id,
           name: p.name,
           phone: p.phone,
+          transportation_type: p.transportation_type,
+          origin_city: p.origin_city,
+          destination_city: p.destination_city,
           flight: p.flight,
           flight_code: p.flight_code,
-          departure_time: p.departure_time,
+          flight_departure_time: p.flight_departure_time,
+          bus_company: p.bus_company,
+          bus_ticket_type: p.bus_ticket_type,
+          bus_departure_time: p.bus_departure_time,
           notes: p.notes,
           user_id: p.user_id,
           created_at: p.created_at,

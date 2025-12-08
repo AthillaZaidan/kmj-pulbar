@@ -65,11 +65,34 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { travel_date_id, name, phone, flight, flight_code, departure_time, notes } = body
+    const { 
+      travel_date_id, 
+      name, 
+      phone, 
+      transportation_type,
+      origin_city,
+      destination_city,
+      flight,
+      flight_code,
+      flight_departure_time,
+      bus_company,
+      bus_ticket_type,
+      bus_departure_time,
+      notes 
+    } = body
 
     // Validate required fields
-    if (!travel_date_id || !name || !phone || !flight || !flight_code || !departure_time) {
+    if (!travel_date_id || !name || !phone || !transportation_type || !origin_city || !destination_city) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    }
+
+    // Validate transportation-specific fields
+    if (transportation_type === 'flight' && (!flight || !flight_code || !flight_departure_time)) {
+      return NextResponse.json({ error: "Missing flight information" }, { status: 400 })
+    }
+
+    if (transportation_type === 'bus' && (!bus_company || !bus_ticket_type || !bus_departure_time)) {
+      return NextResponse.json({ error: "Missing bus information" }, { status: 400 })
     }
 
     // Check if travel date exists and is available
@@ -103,9 +126,15 @@ export async function POST(request: NextRequest) {
         user_id: session.user.id,
         name,
         phone,
-        flight,
-        flight_code,
-        departure_time,
+        transportation_type,
+        origin_city,
+        destination_city,
+        flight: transportation_type === 'flight' ? flight : null,
+        flight_code: transportation_type === 'flight' ? flight_code : null,
+        flight_departure_time: transportation_type === 'flight' ? flight_departure_time : null,
+        bus_company: transportation_type === 'bus' ? bus_company : null,
+        bus_ticket_type: transportation_type === 'bus' ? bus_ticket_type : null,
+        bus_departure_time: transportation_type === 'bus' ? bus_departure_time : null,
         notes: notes || null,
       })
       .select()

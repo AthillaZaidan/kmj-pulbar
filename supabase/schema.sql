@@ -29,9 +29,22 @@ CREATE TABLE participants (
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   phone TEXT NOT NULL,
-  flight TEXT NOT NULL,
-  flight_code TEXT NOT NULL,
-  departure_time TIME NOT NULL,
+  transportation_type TEXT NOT NULL DEFAULT 'flight' CHECK (transportation_type IN ('flight', 'bus')),
+  
+  -- Kota Awal dan Akhir (untuk semua jenis transportasi)
+  origin_city TEXT NOT NULL,
+  destination_city TEXT NOT NULL,
+  
+  -- Fields untuk Pesawat
+  flight TEXT,
+  flight_code TEXT,
+  flight_departure_time TIME,
+  
+  -- Fields untuk Bus
+  bus_company TEXT,
+  bus_ticket_type TEXT,
+  bus_departure_time TIME,
+  
   notes TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
