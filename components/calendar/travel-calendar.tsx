@@ -28,7 +28,9 @@ interface TravelCalendarProps {
 }
 
 export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 0, 1))
+  // Use real current date
+  const today = new Date()
+  const [currentMonth, setCurrentMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
   const { travelDates, getTravelDate } = useTravel()
 
   const getDaysInMonth = (date: Date) => {
@@ -81,7 +83,8 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
   }
 
   const goToToday = () => {
-    setCurrentMonth(new Date(2025, 0, 1))
+    const today = new Date()
+    setCurrentMonth(new Date(today.getFullYear(), today.getMonth(), 1))
   }
 
   return (
@@ -160,7 +163,6 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                console.log('Calendar cell clicked:', day, date)
                 onDateSelect(date, travelDate)
               }}
             >

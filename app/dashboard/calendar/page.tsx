@@ -3,27 +3,261 @@
 import { useState } from "react"
 import { Header } from "@/components/dashboard/header"
 import { TravelCalendar } from "@/components/calendar/travel-calendar"
-import { DayDetailModal } from "@/components/calendar/day-detail-modal"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Calendar, Users, Plane, Clock, Loader2, Check, Trash2 } from "lucide-react"
+import { useTravel } from "@/lib/travel-context"
+import { useAuth } from "@/lib/auth-context"
+
+const MONTHS = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+const airlines = [
+  { value: "Garuda Indonesia", label: "Garuda Indonesia" },
+  { value: "Lion Air", label: "Lion Air" },
+  { value: "Batik Air", label: "Batik Air" },
+  { value: "Citilink", label: "Citilink" },
+  { value: "Sriwijaya Air", label: "Sriwijaya Air" },
+  { value: "other", label: "Lainnya" },
+]
 
 export default function CalendarPage() {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>()
+  const { user } = useAuth()
+  const { getTravelDate, addParticipant, removeParticipant } = useTravel()
+  
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  
+  // Form states
+  const [isRegistering, setIsRegistering] = useState(false)
+  const [isRegistered, setIsRegistered] = useState(false)
+  const [selectedAirline, setSelectedAirline] = useState("")
+  const [departureTime, setDepartureTime] = useState("")
+  const [flightCode, setFlightCode] = useState("")
+  const [notes, setNotes] = useState("")
+  const [showOtherInput, setShowOtherInput] = useState(false)
+  const [customAirline, setCustomAirline] = useState("")
+  const [participantName, setParticipantName] = useState("")
+  const [participantEmail, setParticipantEmail] = useState("")
 
-  const handleDateSelect = (date: Date, travelDate?: any) => {
-    console.log('Date clicked:', date, 'Travel data:', travelDate)
+  const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
     setIsModalOpen(true)
   }
+
+  const resetForm = () => {
+    setSelectedAirline("")
+    setDepartureTime("")
+    setFlightCode("")
+    setNotes("")
+    setCustomAirline("")
+    setShowOtherInput(false)
+    setParticipantName("")
+    setParticipantEmail("")
+    setIsRegistered(false)
+  }
+
+  const handleClose = () => {
+    setIsModalOpen(false)
+    setSelectedDate(null)
+    resetForm()
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedDate) return
+    
+    setIsRegistering(true)
+    await new Promise((resolve) => setTimeout(resolve, 800))
+
+    const airlineName = selectedAirline === "other" ? customAirline : selectedAirline
+    const dateStr = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+
+    addParticipant(dateStr, {
+      name: participantName || user?.name || "Anonymous",
+      email: participantEmail || user?.email || "anonymous@gmail.com",
+      flight: airlineName,
+      flightCode: flightCode,
+      time: departureTime,
+      notes: notes || undefined,
+    })
+
+    setIsRegistering(false)
+    setIsRegistered(true)
+  }
+
+  // Get travel data for selected date
+  const dateStr = selectedDate 
+    ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
+    : ""
+  const travelDate = selectedDate ? getTravelDate(dateStr) : undefined
+  const participants = travelDate?.participants || []
+  const formattedDate = selectedDate 
+    ? `${DAYS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTHS[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`
+    : ""
+
+  const groupedParticipants = participants.reduce((acc, participant) => {
+    const flight = `${participant.flight} ${participant.flightCode}`
+    if (!acc[flight]) acc[flight] = []
+    acc[flight].push(participant)
+    return acc
+  }, {} as Record<string, typeof participants>)
 
   return (
     <div className="flex flex-col h-screen">
       <Header title="Kalender" subtitle="Lihat dan pilih tanggal keberangkatan" />
 
       <div className="flex-1 overflow-auto p-6">
-        <TravelCalendar onDateSelect={handleDateSelect} selectedDate={selectedDate} />
+        <TravelCalendar onDateSelect={handleDateSelect} selectedDate={selectedDate || undefined} />
       </div>
 
-      <DayDetailModal open={isModalOpen} onOpenChange={setIsModalOpen} date={selectedDate} />
+      <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) handleClose() }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl">{formattedDate}</DialogTitle>
+                <DialogDescription>
+                  <span className="flex items-center gap-4 mt-1">
+                    <span className="flex items-center gap-1">
+                      <Users className="h-3.5 w-3.5" />
+                      {participants.length} Peserta
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Plane className="h-3.5 w-3.5" />
+                      {Object.keys(groupedParticipants).length} Penerbangan
+                    </span>
+                  </span>
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          <Tabs defaultValue="register" className="flex-1 flex flex-col overflow-hidden">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="register">Daftar</TabsTrigger>
+              <TabsTrigger value="participants">Peserta ({participants.length})</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="register" className="flex-1 overflow-auto mt-4">
+              {isRegistered ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                    <Check className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Pendaftaran Berhasil!</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Anda telah terdaftar untuk keberangkatan tanggal {selectedDate?.getDate()} {selectedDate && MONTHS[selectedDate.getMonth()]}.
+                  </p>
+                  <Button variant="outline" onClick={() => setIsRegistered(false)}>Daftar Lagi</Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Nama Lengkap</Label>
+                      <Input id="name" placeholder="Nama lengkap" value={participantName} onChange={(e) => setParticipantName(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" placeholder="email@gmail.com" value={participantEmail} onChange={(e) => setParticipantEmail(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Maskapai</Label>
+                      <Select value={selectedAirline} onValueChange={(v) => { setSelectedAirline(v); setShowOtherInput(v === "other") }}>
+                        <SelectTrigger><SelectValue placeholder="Pilih maskapai" /></SelectTrigger>
+                        <SelectContent>
+                          {airlines.map((airline) => (
+                            <SelectItem key={airline.value} value={airline.value}>{airline.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="flightCode">Kode Penerbangan</Label>
+                      <Input id="flightCode" placeholder="GA-123" value={flightCode} onChange={(e) => setFlightCode(e.target.value)} />
+                    </div>
+                  </div>
+
+                  {showOtherInput && (
+                    <div className="space-y-2">
+                      <Label htmlFor="customAirline">Nama Maskapai</Label>
+                      <Input id="customAirline" placeholder="Masukkan nama maskapai" value={customAirline} onChange={(e) => setCustomAirline(e.target.value)} />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="time">Waktu Keberangkatan</Label>
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input id="time" type="time" className="pl-10" value={departureTime} onChange={(e) => setDepartureTime(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Catatan (Opsional)</Label>
+                    <Textarea id="notes" placeholder="Contoh: Window seat, extra baggage, dll." value={notes} onChange={(e) => setNotes(e.target.value)} />
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button type="button" variant="outline" className="flex-1" onClick={handleClose}>Batal</Button>
+                    <Button type="submit" className="flex-1 bg-accent hover:bg-accent/90" disabled={isRegistering}>
+                      {isRegistering ? (<><Loader2 className="mr-2 h-4 w-4 animate-spin" />Mendaftar...</>) : "Daftar"}
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </TabsContent>
+
+            <TabsContent value="participants" className="flex-1 overflow-auto mt-4">
+              {participants.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
+                  <Users className="h-12 w-12 mb-4 opacity-50" />
+                  <p>Belum ada peserta terdaftar untuk tanggal ini.</p>
+                  <p className="text-sm">Jadilah yang pertama mendaftar!</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {Object.entries(groupedParticipants).map(([flight, flightParticipants]) => (
+                    <div key={flight} className="border rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Plane className="h-4 w-4 text-accent" />
+                        <span className="font-medium">{flight}</span>
+                        <span className="text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full">{flightParticipants.length} orang</span>
+                      </div>
+                      <div className="space-y-2">
+                        {flightParticipants.map((p) => (
+                          <div key={p.id} className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg">
+                            <div>
+                              <p className="font-medium text-sm">{p.name}</p>
+                              <p className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" />{p.time}</p>
+                            </div>
+                            {user?.email === p.email && (
+                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive" onClick={() => removeParticipant(dateStr, p.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

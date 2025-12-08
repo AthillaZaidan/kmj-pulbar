@@ -60,13 +60,11 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
   const [participantName, setParticipantName] = useState("")
   const [participantEmail, setParticipantEmail] = useState("")
 
-  if (!date) return null
-
-  const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
-  const travelDate = getTravelDate(dateStr)
+  // Don't return null - let Dialog handle the closed state
+  const dateStr = date ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` : ""
+  const travelDate = date ? getTravelDate(dateStr) : undefined
   const participants = travelDate?.participants || []
-
-  const formattedDate = `${DAYS[date.getDay()]}, ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+  const formattedDate = date ? `${DAYS[date.getDay()]}, ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}` : ""
 
   const handleAirlineChange = (value: string) => {
     setSelectedAirline(value)
@@ -87,6 +85,9 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!date) return
+    
     setIsRegistering(true)
 
     // Simulate API call
@@ -130,9 +131,14 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
     },
     {} as Record<string, typeof participants>,
   )
-
+  
+  // Don't render if no date
+  if (!open || !date) {
+    return null
+  }
+  
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleClose} modal={true}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <div className="flex items-center gap-3">

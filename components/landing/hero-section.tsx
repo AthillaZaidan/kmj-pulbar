@@ -11,19 +11,16 @@ const featureSlides = [
     number: "01",
     title: "KALENDER INTERAKTIF",
     description: "Pilih tanggal keberangkatan dengan mudah melalui kalender visual yang menampilkan peserta per hari.",
-    image: "/calendar-app-interface.png",
   },
   {
     number: "02",
     title: "TEMAN SEPERJALANAN",
     description: "Ketahui siapa saja yang berangkat di hari dan penerbangan yang sama untuk koordinasi lebih mudah.",
-    image: "/group-of-students-traveling.jpg",
   },
   {
     number: "03",
     title: "PILIHAN MASKAPAI",
     description: "Berbagai maskapai tersedia: Garuda, Lion Air, Batik Air, dan Citilink sesuai preferensi Anda.",
-    image: "/airplane-flying.jpg",
   },
 ]
 
@@ -181,13 +178,8 @@ export function HeroSection() {
                 <h3 className="font-bold text-foreground text-lg mb-2">{currentFeature.title}</h3>
                 <p className="text-muted-foreground text-sm">{currentFeature.description}</p>
               </div>
-              <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
-                <Image
-                  src={currentFeature.image || "/placeholder.svg"}
-                  alt={currentFeature.title}
-                  fill
-                  className="object-cover"
-                />
+              <div className="w-20 h-20 rounded-xl bg-linear-to-br from-primary/10 to-accent/10 flex items-center justify-center shrink-0">
+                <div className="text-xl font-bold text-primary/60">{currentFeature.number}</div>
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-4">
