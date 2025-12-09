@@ -125,10 +125,6 @@ export default function MyRegistrationsPage() {
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export PDF
-                </Button>
               </CardContent>
             </Card>
 
