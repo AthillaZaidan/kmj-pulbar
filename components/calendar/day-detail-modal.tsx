@@ -1,7 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -69,9 +70,11 @@ const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
 export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps) {
   const { user } = useAuth()
   const { getTravelDate, addParticipant, removeParticipant } = useTravel()
+  const router = useRouter()
 
   const [isRegistering, setIsRegistering] = useState(false)
   const [isRegistered, setIsRegistered] = useState(false)
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null)
   
   // Transportation type
   const [transportationType, setTransportationType] = useState<'flight' | 'bus'>('flight')
@@ -132,13 +135,32 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
     setParticipantName("")
     setParticipantPhone("")
     setIsRegistered(false)
+    setToast(null)
   }
+
+  // Clear toast when modal opens or date changes to avoid persisting message across instances
+  useEffect(() => {
+    if (open) setToast(null)
+  }, [open, date])
+
+  // Auto-hide toast after timeout
+  useEffect(() => {
+    if (!toast) return
+    const t = setTimeout(() => setToast(null), 3000)
+    return () => clearTimeout(t)
+  }, [toast])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!date) return
     
+    // client-side: prevent user from registering twice for same date
+    if (user && participants.some((p) => p.user_id === user.id)) {
+      setToast({ type: "error", message: "Anda sudah terdaftar untuk tanggal ini" })
+      return
+    }
+
     setIsRegistering(true)
 
     // Simulate API call
@@ -164,11 +186,16 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
     }
 
     console.log("Participant Data:", participantData)
-    
-    addParticipant(dateStr, participantData)
 
-    setIsRegistering(false)
-    setIsRegistered(true)
+    try {
+      await addParticipant(dateStr, participantData)
+      setIsRegistered(true)
+    } catch (err: any) {
+      console.error("Register error:", err)
+      setToast({ type: "error", message: err?.message || "Gagal mendaftar. Coba lagi." })
+    } finally {
+      setIsRegistering(false)
+    }
   }
 
   const handleRemoveParticipant = (participantId: string) => {
@@ -254,7 +281,14 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
                   Anda telah terdaftar untuk keberangkatan tanggal {date.getDate()} {MONTHS[date.getMonth()]}.
                 </p>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={resetForm}>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      resetForm()
+                      onOpenChange(false)
+                      router.push('/dashboard/calendar')
+                    }}
+                  >
                     Daftar Lagi
                   </Button>
                   <Button
@@ -267,6 +301,11 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                  {toast && (
+                    <div className={`text-sm ${toast.type === 'error' ? 'text-destructive' : 'text-green-600'}`}>
+                      {toast.message}
+                    </div>
+                  )}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">
