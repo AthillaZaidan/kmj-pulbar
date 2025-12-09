@@ -72,12 +72,6 @@ export default function ProfilePage() {
                     <Camera className="h-4 w-4" />
                   </button>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-2">JPG, PNG atau GIF. Maksimal 2MB.</p>
-                  <Button variant="outline" size="sm">
-                    Upload Foto
-                  </Button>
-                </div>
               </div>
             </CardContent>
           </Card>
