@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import SplitText from "@/components/ui/SplitText"
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useMemo, useCallback } from "react"
 
@@ -89,7 +90,17 @@ export function HeroSection() {
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-8 text-balance">
               Platform Koordinasi
-              <span className="text-accent"> pulang bersama </span>
+              <SplitText
+                text="Pulang bersama"
+                className="text-accent inline-block"
+                delay={50}
+                duration={0.6}
+                ease="power3.out"
+                splitType="chars"
+                from={{ opacity: 0, y: 40 }}
+                to={{ opacity: 1, y: 0 }}
+                autoPlay={true}
+              />
               mahasiswa Jambi.
             </h1>
 

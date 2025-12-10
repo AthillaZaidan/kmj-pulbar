@@ -663,7 +663,7 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
                           </p>
                         </div>
                         {/* Show delete button only for own registration or if admin */}
-                        {(user?.email === participant.user_id || user?.email === "admin@kmjpulbar.com") && (
+                        {(user?.email === participant.user_id || user?.email === "athillazaidanstudy@gmail.com") && (
                           <Button
                             variant="ghost"
                             size="icon"
