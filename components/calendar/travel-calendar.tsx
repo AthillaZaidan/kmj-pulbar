@@ -56,21 +56,11 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
     return getTravelDate(dateStr)
   }
 
-  const getFlightSummary = (participants: TravelDate["participants"]) => {
-    const flights: Record<string, number> = {}
-    participants.forEach((p) => {
-      // Determine the key based on what data is actually available
-      let flightKey: string
-      if (p.transportation_type === 'flight' || p.flight) {
-        flightKey = p.flight || "Pesawat"
-      } else if (p.transportation_type === 'bus' || p.bus_company) {
-        flightKey = p.bus_company || "Bus"
-      } else {
-        flightKey = "Unknown"
-      }
-      flights[flightKey] = (flights[flightKey] || 0) + 1
-    })
-    return Object.entries(flights).map(([airline, count]) => ({ airline, count }))
+  const getParticipantsSummary = (participants: TravelDate["participants"]) => {
+    return participants.map((p) => ({
+      name: p.name,
+      transportType: p.transportation_type === 'flight' ? '✈️' : p.transportation_type === 'bus' ? '🚌' : '🚗'
+    }))
   }
 
   const getCapacityColor = (participantCount: number, capacity: number, isAvailable: boolean) => {
@@ -146,7 +136,7 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
           const isSelected = selectedDate?.toDateString() === date.toDateString()
           const isToday = new Date().toDateString() === date.toDateString()
           const hasParticipants = travelDate && travelDate.participants.length > 0
-          const flights = hasParticipants ? getFlightSummary(travelDate.participants) : []
+          const participantsList = hasParticipants ? getParticipantsSummary(travelDate.participants) : []
 
           return (
             <div
@@ -186,23 +176,17 @@ export function TravelCalendar({ onDateSelect, selectedDate }: TravelCalendarPro
                 )}
               </div>
 
-              {/* Flight info cards */}
+              {/* Participant info cards */}
               {hasParticipants && (
                 <div className="space-y-0.5 sm:space-y-1">
-                  {flights.slice(0, 2).map((flight, i) => (
+                  {participantsList.slice(0, 2).map((participant, i) => (
                     <div key={i} className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-primary/5 rounded text-[10px] sm:text-xs">
-                      <div
-                        className={cn(
-                          "w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full shrink-0",
-                          i === 0 ? "bg-accent" : i === 1 ? "bg-primary" : "bg-muted-foreground",
-                        )}
-                      />
-                      <span className="truncate text-card-foreground font-medium">{flight.airline}</span>
-                      <span className="text-muted-foreground ml-auto text-[9px] sm:text-xs font-semibold">{flight.count}</span>
+                      <span className="text-[10px] sm:text-xs">{participant.transportType}</span>
+                      <span className="truncate text-card-foreground font-medium">{participant.name}</span>
                     </div>
                   ))}
-                  {flights.length > 2 && (
-                    <p className="text-[10px] sm:text-xs text-muted-foreground px-1.5 sm:px-2 font-medium">+{flights.length - 2} lainnya</p>
+                  {participantsList.length > 2 && (
+                    <p className="text-[10px] sm:text-xs text-muted-foreground px-1.5 sm:px-2 font-medium">+{participantsList.length - 2} lainnya</p>
                   )}
                 </div>
               )}
