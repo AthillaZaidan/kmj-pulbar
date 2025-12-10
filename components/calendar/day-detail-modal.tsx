@@ -662,14 +662,18 @@ export function DayDetailModal({ open, onOpenChange, date }: DayDetailModalProps
                             {participant.notes && <span className="text-accent">• {participant.notes}</span>}
                           </p>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => handleRemoveParticipant(participant.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {/* Show delete button only for own registration or if admin */}
+                        {(user?.email === participant.user_id || user?.email === "admin@kmjpulbar.com") && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => handleRemoveParticipant(participant.id)}
+                            title="Hapus pendaftaran"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     ))}
                   </div>
